@@ -8,7 +8,7 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addToCart: (state, action) => {
+    addToCart: (state, action: any) => {
       const item = action.payload
 
       if (!state.cartItems[action.payload.id]) {
@@ -44,8 +44,32 @@ const cartSlice = createSlice({
         }
       }
     },
+
+    decreaseQuantityFromCart: (state, action: any) => {
+      const item2 = action.payload
+      item2.qty =
+        state.cartItems[action.payload.id].qty > 0 &&
+        state.cartItems[item2.id].qty - 1
+      item2.totalPrice = item2.price * item2.qty
+
+      return {
+        ...state,
+        cartItems: {
+          ...state.cartItems,
+          [item2.id]: {
+            ...item2,
+          },
+        },
+      }
+    },
+
+    removeFromCart: (state, action: any) => {
+      const item3 = action.payload
+      delete state.cartItems[item3.id]
+    },
   },
 })
 
-export const { addToCart } = cartSlice.actions
+export const { addToCart, decreaseQuantityFromCart, removeFromCart } =
+  cartSlice.actions
 export default cartSlice.reducer

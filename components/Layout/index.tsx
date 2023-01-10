@@ -7,10 +7,10 @@ interface IProps {
 
 function Layout({ children }: IProps) {
   return (
-    <>
+    <div className='relative'>
       <Navbar />
       {children}
-    </>
+    </div>
   )
 }
 

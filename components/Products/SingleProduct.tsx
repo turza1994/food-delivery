@@ -13,7 +13,7 @@ function SingleProduct({ data }: any) {
   }
 
   return (
-    <div className='hover:shadow-lg rounded-t-[10px] cursor-pointer transition duration-100 ease-in'>
+    <div className='hover:shadow-lg rounded-t-[10px] cursor-pointer transition duration-100 ease-in relative overflow-hidden'>
       <div className='w-[277px] h-[250px] overflow-hidden relative rounded-t-[10px]'>
         <Image src={image} fill alt='food image' />
       </div>
@@ -47,6 +47,9 @@ function SingleProduct({ data }: any) {
             />
           </button>
         </div>
+      </div>
+      <div className='h-[30px] w-[32px] text-xs absolute top-0 left-[-1px] bg-[#F3BA00] flex items-center justify-center'>
+        20%
       </div>
     </div>
   )

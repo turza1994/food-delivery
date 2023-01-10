@@ -9,7 +9,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className='relative flex flex-wrap items-center justify-between bg-[#0C1712] sm:px-[108px]'>
+      <nav className='fixed w-full z-10 flex flex-wrap items-center justify-between bg-[#0C1712] sm:px-[108px]'>
         <div className='w-full flex flex-wrap items-center justify-between'>
           <div className='w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start'>
             <a
@@ -121,6 +121,7 @@ function Navbar() {
                       object-fit='contain'
                       alt='cart icon'
                     />
+                    <div className='h-[8px] w-[8px] absolute right-0 bg-[#F3BA00] rounded-full'></div>
                   </i>
                 </a>
               </li>
