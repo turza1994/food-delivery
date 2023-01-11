@@ -8,7 +8,7 @@ function SingleProduct({ data }: any) {
   const { name, image, price } = data
 
   const handleAddToCart = () => {
-    data = { ...data, qty: 0, totalPrice: 0 }
+    data = { ...data, qty: 0, totalPrice: 0, totalVat: 0 }
     dispatch(addToCart(data))
   }
 

@@ -2,6 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 const initialState: any = {
   cartItems: {},
+  price: 0,
+  vat: 0,
+  total: 0,
 }
 
 const cartSlice = createSlice({
@@ -14,6 +17,7 @@ const cartSlice = createSlice({
       if (!state.cartItems[action.payload.id]) {
         item.qty = 1
         item.totalPrice = item.price
+        item.totalVat = item.vat
 
         return {
           ...state,
@@ -23,43 +27,54 @@ const cartSlice = createSlice({
               ...item,
             },
           },
+          price: state.price + item.price,
+          vat: state.vat + item.vat,
+          total: state.total + item.price + item.vat,
         }
       } else {
-        item.qty =
+        if (
           state.cartItems[action.payload.id].quantity_available >
           state.cartItems[action.payload.id].qty
-            ? state.cartItems[action.payload.id].qty + 1
-            : state.cartItems[action.payload.id].qty
+        ) {
+          item.qty = state.cartItems[action.payload.id].qty + 1
+          item.totalPrice = item.price * item.qty
+          item.totalVat = item.vat * item.qty
 
-        item.totalPrice = item.price * item.qty
-
-        return {
-          ...state,
-          cartItems: {
-            ...state.cartItems,
-            [item.id]: {
-              ...item,
+          return {
+            ...state,
+            cartItems: {
+              ...state.cartItems,
+              [item.id]: {
+                ...item,
+              },
             },
-          },
+            price: state.price + item.price,
+            vat: state.vat + item.vat,
+            total: state.total + item.price + item.vat,
+          }
         }
       }
     },
 
     decreaseQuantityFromCart: (state, action: any) => {
       const item2 = action.payload
-      item2.qty =
-        state.cartItems[action.payload.id].qty > 0 &&
-        state.cartItems[item2.id].qty - 1
-      item2.totalPrice = item2.price * item2.qty
+      if (state.cartItems[action.payload.id].qty > 0) {
+        item2.qty = state.cartItems[item2.id].qty - 1
+        item2.totalPrice = item2.price * item2.qty
+        item2.totalVat = item2.vat * item2.qty
 
-      return {
-        ...state,
-        cartItems: {
-          ...state.cartItems,
-          [item2.id]: {
-            ...item2,
+        return {
+          ...state,
+          cartItems: {
+            ...state.cartItems,
+            [item2.id]: {
+              ...item2,
+            },
           },
-        },
+          price: state.price - item2.price,
+          vat: state.vat - item2.vat,
+          total: state.total - (item2.price + item2.vat),
+        }
       }
     },
 

@@ -12,12 +12,12 @@ function SingleCartItem({ data }: any) {
   const dispatch = useAppDispatch()
 
   const handleDecreaseQuantity = () => {
-    data = { ...data, qty: 0, totalPrice: 0 }
+    data = { ...data, qty: 0, totalPrice: 0, totalVat: 0 }
     dispatch(decreaseQuantityFromCart(data))
   }
 
   const handleIncreaseQuantity = () => {
-    data = { ...data, qty: 0, totalPrice: 0 }
+    data = { ...data, qty: 0, totalPrice: 0, totalVat: 0 }
     dispatch(addToCart(data))
   }
 
@@ -27,7 +27,7 @@ function SingleCartItem({ data }: any) {
 
   return (
     <div className='p-2 flex items-center justify-between bg-white hover:bg-gray-100 cursor-pointer border-b border-gray-100'>
-      <div className='p-2 flex items-center gap-2'>
+      <div className='flex items-center gap-2'>
         <Image src={data.image} alt='img product' width={50} height={50} />
         <span className='text-sm'>{name}</span>
       </div>

@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useAppSelector } from '../../redux/hooks'
 import SingleCartItem from './SingleCartItem'
@@ -6,12 +7,20 @@ import SingleCartItem from './SingleCartItem'
 function CartBar() {
   const { cartItems } = useAppSelector((state) => state.cart)
   const cartItemsArray = cartItems && Object.keys(cartItems)
-  const [subtotal, setSubtotal] = useState(0)
+  const [totalPrice, setTotalPrice] = useState(0)
+  const [totalVat, setTotalVat] = useState(0)
 
   useEffect(() => {
-    setSubtotal(
+    setTotalPrice(
       cartItemsArray.reduce(
         (pv: any, cv: any) => pv + cartItems[cv].totalPrice,
+        0
+      )
+    )
+
+    setTotalVat(
+      cartItemsArray.reduce(
+        (pv: any, cv: any) => pv + cartItems[cv].totalVat,
         0
       )
     )
@@ -26,11 +35,11 @@ function CartBar() {
         ))}
       </div>
       <p className='my-auto text-center py-2'>
-        Subtotal Price:{' '}
-        <span className='text-black font-semibold'>${subtotal}</span>
+        Total Price:{' '}
+        <span className='text-black font-semibold'>${totalPrice}</span>
       </p>
       <button className='my-auto py-2 font-semibold bg-[#F3BA00] text-black'>
-        Checkout
+        <Link href='/checkout'>Checkout</Link>
       </button>
     </div>
   )
