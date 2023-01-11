@@ -1,10 +1,35 @@
 import React from 'react'
-import { useAppSelector } from '../redux/hooks'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import SingleCartItem from '../components/Cart/SingleCartItem'
+import { useForm } from 'react-hook-form'
+import { createOrder } from '../redux/orderSlice'
+import OrderList from '../components/Order/OrderList'
 
 function Checkout() {
+  const dispatch = useAppDispatch()
   const { cartItems, price, vat, total } = useAppSelector((state) => state.cart)
   const cartItemsArray = cartItems && Object.keys(cartItems)
+
+  const { register, handleSubmit, reset } = useForm()
+
+  const onSubmit = (data: any) => {
+    const orderData = {
+      customer: data,
+      calculation: { price, vat, total },
+      items: cartItemsArray.map((id: any) => {
+        return {
+          id: id,
+          name: cartItems[id].name,
+          price: cartItems[id].price,
+          quantity: cartItems[id].qty,
+          vat: cartItems[id].vat,
+          addon: cartItems[id].addons,
+        }
+      }),
+    }
+    dispatch(createOrder(orderData))
+    reset()
+  }
 
   return (
     <div className='pt-[65px]'>
@@ -19,7 +44,10 @@ function Checkout() {
             <h2 className='mb-4 font-bold md:text-xl text-heading '>
               Shipping Address
             </h2>
-            <form className='justify-center w-full mx-auto'>
+            <form
+              className='justify-center w-full mx-auto'
+              onSubmit={handleSubmit(onSubmit)}
+            >
               <div className=''>
                 <div className='space-x-0 lg:flex lg:space-x-4'>
                   <div className='w-full lg:w-9/12'>
@@ -31,10 +59,10 @@ function Checkout() {
                     </label>
                     <input
                       id='name'
-                      name='name'
                       type='text'
                       placeholder='First Name'
                       className='w-full px-4 py-3 text-sm border border-gray-300 rounded lg:text-sm focus:outline-none focus:ring-1 focus:ring-blue-600'
+                      {...register('name')}
                     />
                   </div>
                 </div>
@@ -49,10 +77,10 @@ function Checkout() {
                     </label>
                     <input
                       id='phone'
-                      name='phone'
                       type='tel'
                       placeholder='Phone'
                       className='w-full px-4 py-3 text-sm border border-gray-300 rounded lg:text-sm focus:outline-none focus:ring-1 focus:ring-blue-600'
+                      {...register('phone')}
                     />
                   </div>
                 </div>
@@ -68,16 +96,19 @@ function Checkout() {
                     <textarea
                       className='w-full px-4 py-3 text-xs border border-gray-300 rounded lg:text-sm focus:outline-none focus:ring-1 focus:ring-blue-600'
                       id='address'
-                      name='address'
                       cols={20}
                       rows={4}
                       placeholder='Address'
+                      {...register('address')}
                     ></textarea>
                   </div>
                 </div>
 
                 <div className='mt-4'>
-                  <button className='w-full lg:w-9/12 rounded-[10px] font-semibold px-6 py-3 text-black bg-[#F3BA00] hover:opacity-80'>
+                  <button
+                    type='submit'
+                    className='w-full lg:w-9/12 rounded-[10px] font-semibold px-6 py-3 text-black bg-[#F3BA00] hover:opacity-80'
+                  >
                     Process
                   </button>
                 </div>
@@ -110,6 +141,13 @@ function Checkout() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className=''>
+        <h2 className='mb-2 font-bold md:text-xl text-heading text-center'>
+          My Orders
+        </h2>
+        <OrderList />
       </div>
     </div>
   )
